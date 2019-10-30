@@ -23,7 +23,7 @@ class Database
     {
            //테이블 객체 연결
            $this->Table = new \Module\Database\Table($this);
-        echo "클래스 생성";
+       // echo "클래스 생성";
         // \ -> 전역 네임스페이스
         $this->connect = new \mysqli($config['host'], $config['user'], $config['passwd'],$config['database']);
         if(!$this->connect ->connect_errno){
