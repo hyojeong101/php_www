@@ -1,4 +1,5 @@
 <?php 
+namespace Module\Database;
 //선언 -> 생성-> 호출
 //데이터 베이스 선언
 class Database
@@ -21,11 +22,12 @@ class Database
     public function __construct($config)
     {
            //테이블 객체 연결
-           $this->Table = new Table($this);
+           $this->Table = new \Module\Database\Table($this);
         echo "클래스 생성";
-        $this->connect = new mysqli($config['host'], $config['user'], $config['passwd'],$config['database']);
+        // \ -> 전역 네임스페이스
+        $this->connect = new \mysqli($config['host'], $config['user'], $config['passwd'],$config['database']);
         if(!$this->connect ->connect_errno){
-            echo "DB 접속 성공이에요";
+        //    echo "DB 접속 성공이에요";
         }else{
             echo"접속이 안돼요";
         }
@@ -33,7 +35,7 @@ class Database
     public function queryExecute($query)
     {
         if($result = mysqli_query($this->connect,$query)){
-            echo " query성공";
+      //      echo " query성공";
         }else {
             print "query 실패";
         }
