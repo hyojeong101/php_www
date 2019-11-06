@@ -31,26 +31,52 @@ class Select
     {
         print_r($_POST);
         if($_POST){
-            $query = "INSERT INTO ".$tableName." (`FirstName`,`Lastname`)
-                        VALUES('".$_POST['firstname']."','".$_POST['lastname']."')";
+            
+            $fields = " (";
+            $data = "(";
+            foreach($_POST as $key => $value){
+                $fields .="`".$key."`,";
+                $data .="'".$value."',";
+            }
+            $fields =rtrim($fields,","); //마지막 콤마 제거
+            $data =rtrim($data,","); //마지막 콤마 제거
+            $fields .= ")";
+            $data .= ")";
+
+
+            //$query .= "(`FirstName`,`Lastname`)";
+            $query = "INSERT INTO ".$tableName.$fields." VALUES ".$data;           
+           // $query .= "('".$_POST['Firstname']."','".$_POST['Lastname']."')";
+            
+            echo $query."<br>";
+            //exit;
+
             $result = $this->db->queryExecute($query);
-    //페이지 이동
+          //페이지 이동
             header("location:"."/select/".$tableName);
         }
-     // echo "메인 호출이에요.";
-     $query = "DESC ".$tableName;
-     $result = $this->db->queryExecute($query);
-     $count = mysqli_num_rows($result);
-     $content = ""; // 초기화
-     $rows = []; // 배열 초기화
+
+        $content .= "<form method=\"post\">";
+        $query = "DESC ".$tableName;
+        $result = $this->db->queryExecute($query);
+        $count = mysqli_num_rows($result);
      for ($i=0;$i<$count;$i++) {
          $row = mysqli_fetch_object($result);
-         $rows []= $row; // 배열 추가 (2차원 배열)
+         //print_r($row);
+         if($row->Field=="id")continue;
+         $content .= $row->Field."<input type=\"text\" name=\"".$row->Field."\">";
+         $content .="<br>";
      }
-
-     $content = $this->Html->table($rows);
+        $content  .= "<input type=\"submit\" value=\"전송\">";
+        $content .= "</form>";
+     
+    //  $content = ""; // 초기화
+    //  $rows = []; // 배열 초기화
+     
     $body = file_get_contents("../Resource/insert.html");
         $body = str_replace("{{content}}",$content, $body); // 데이터 치환
+        //테이블 별로 new  버튼 링크 생성
+        $body =str_replace("{{new}}",$content,$body);
         echo $body;
 }
     public function list($tableName){
