@@ -1,6 +1,6 @@
 <?php
 namespace App\Controller;
-class Databases
+class Databases extends Controller
 {
     private $db;
     // 생성자
@@ -11,6 +11,8 @@ class Databases
     }
     public function main()
     {
+        //추상틀래스 메서드 호출
+        $this->hello();
         $uri = new \Module\Http\Uri;
         if($uri->second() == "new") {
             print_r($_POST);
